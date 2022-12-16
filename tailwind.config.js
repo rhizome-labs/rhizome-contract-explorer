@@ -1,7 +1,7 @@
 const colors = require('tailwindcss/colors')
 
 module.exports = {
-  content: ["./rhizome_contract_caller/app/templates/**/*.{html,js}"],
+  content: ["./rhizome_contract_explorer/app/templates/**/*.{html,js}"],
   theme: {
     colors: {
       transparent: 'transparent',

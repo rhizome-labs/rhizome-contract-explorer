@@ -15,7 +15,7 @@ from iconsdk.providers.http_provider import HTTPProvider
 from iconsdk.signed_transaction import SignedTransaction, Transaction
 from iconsdk.wallet.wallet import KeyWallet
 
-from rhizome_contract_caller import ENV
+from rhizome_contract_explorer import ENV
 
 
 class Icx:

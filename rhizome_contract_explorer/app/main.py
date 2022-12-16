@@ -4,8 +4,8 @@ import os
 from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.staticfiles import StaticFiles
 
-from rhizome_contract_caller import ENV, TEMPLATES
-from rhizome_contract_caller.app.icx import Icx
+from rhizome_contract_explorer import ENV, TEMPLATES
+from rhizome_contract_explorer.app.icx import Icx
 
 app = FastAPI(docs_url=None)
 
