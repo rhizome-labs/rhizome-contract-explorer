@@ -23,9 +23,9 @@
 
     </head>
 
-    <!--<body class="bg-black text-gray-100 font-mono">
-        <main class="flex flex-col max-h-screen h-screen box-border">
-            <div id="container" class="flex flex-col gap-4 h-full">
+    <!--<body class="font-mono text-gray-100 bg-black">
+        <main class="box-border flex flex-col h-screen max-h-screen">
+            <div id="container" class="flex flex-col h-full gap-4">
                 <header>
                     <h1 class="text-2xl font-bold">RHIZOME</h1>
                 </header>
@@ -37,19 +37,19 @@
         </main>
     </body>-->
 
-    <body class="bg-black text-gray-200 font-mono">
-        <main class="flex flex-col max-h-screen h-screen box-border">
+    <body class="font-mono text-gray-200 bg-black">
+        <main class="box-border flex flex-col h-screen max-h-screen">
             <header>
-                <h1 class="text-2xl font-bold p-4">RHIZOME</h1>
+                <h1 class="p-4 text-2xl font-bold">RHIZOME</h1>
             </header>
-            <div class="flex-1 px-4 gap-4 flex flex-col h-full overflow-y-auto">
+            <div class="flex flex-col flex-1 h-full gap-4 px-4 overflow-y-auto">
                 {% block container %}{% endblock %}
             </div>
-            <footer class="flex justify-between items-center p-4">
+            <footer class="flex items-center justify-between p-4">
                 <p class="text-sm text-gray-400">
-                    Developed by <a class="underline hover:no-underline" href="https://rhizome.dev">RHIZOME</a>
+                    Developed by <a class="hover:no-underline underline" href="https://rhizome.dev">RHIZOME</a>
                 </p>
-                <div hx-get="/latest-block/" hx-trigger="load, every 2s"></div>
+                <div hx-get="/latest-block/" hx-trigger="load"></div>
             </footer>
         </main>
     </body>

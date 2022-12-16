@@ -1,5 +1,5 @@
 {
-  "name": "rhizome-contract-caller",
+  "name": "rhizome-contract-exporter",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",

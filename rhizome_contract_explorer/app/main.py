@@ -138,28 +138,33 @@ async def post_tx(
 ):
     # Parse form data.
     form_data = await request.form()
-    form_data_dict = form_data.items()
 
-    # Build params object for transaction.
-    params = {param[0]: param[1] for param in form_data_dict}
+    # Only parse form data is there is form data to parse.
+    if len(form_data) > 0:
+        form_data_dict = form_data.items()
 
-    # Perform validation on input values.
-    for k, v in params.items():
-        if not k.endswith(":type"):
-            param_type = params[f"{k}:type"]
-            try:
-                if param_type == "address":
-                    if len(v) != 42 or v[:2] != "hx":
-                        raise ValueError
-                elif param_type == "int":
-                    params[k] = int(v)
-                elif param_type == "str":
-                    params[k] = str(v)
-            except ValueError:
-                return f"<p>ValueError - {k, v}</p>"
+        # Build params object for transaction.
+        params = {param[0]: param[1] for param in form_data_dict}
 
-    # Strip :type items from params.
-    params = {k: v for k, v in params.items() if not k.endswith(":type")}
+        # Perform validation on input values.
+        for k, v in params.items():
+            if not k.endswith(":type"):
+                param_type = params[f"{k}:type"]
+                try:
+                    if param_type == "address":
+                        if len(v) != 42 or v[:2] != "hx":
+                            raise ValueError
+                    elif param_type == "int":
+                        params[k] = int(v)
+                    elif param_type == "str":
+                        params[k] = str(v)
+                except ValueError:
+                    return f"<p>ValueError - {k, v}</p>"
+
+        # Strip :type items from params.
+        params = {k: v for k, v in params.items() if not k.endswith(":type")}
+    else:
+        params = {}
 
     # Initialize Icx instance.
     icx = Icx()
