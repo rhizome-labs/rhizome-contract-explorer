@@ -1,0 +1,131 @@
+<div class="grid grid-cols-2 h-full overflow-y-auto gap-4">
+    <div class="h-full overflow-y-auto flex flex-col border-2 border-gray-700 divide-y-2 divide-gray-700">
+        <header class="p-4 flex justify-between">
+            <h2 class="font-bold text-lg">Read Methods ({{ read_methods|length }})</h2>
+            <button _="on click toggle .hidden on #read-methods-list then toggle .rotate-180 on me">&#9660;</button>
+        </header>
+        <div id="read-methods-list" class="hidden p-4 duration-500 ease-in-out">
+            <p class="break-normal">
+                {% for method in read_methods %}<a class="hover:underline hover:font-bold hover:text-cyan-500"
+                    href="#{{ method.name }}-read">{{ method.name }}</a>{% if not loop.last %}, {% endif %}{% endfor %}
+            </p>
+        </div>
+        <div class="overflow-y-auto flex-1">
+            <div class="overflow-y-auto">
+                <div id="read-methods" class="overflow-y-auto h-full divide-y divide-gray-700">
+                    {% for method in read_methods %}
+                    {% if method.inputs|length == 0 %}
+                    <div id="{{ method.name }}-read" class="flex flex-col gap-4 px-4 py-6">
+                        <p>
+                            {{ loop.index }}. <span class="font-bold">{{ method.name }}</span> &rarr;
+                            {{ method.outputs[0].type }}
+                        </p>
+                        <pre _="on htmx:afterSettle js hljs.highlightAll()"
+                            hx-get="/call/?api_endpoint={{ api_endpoint }}&network_id={{ network_id }}&contract_address={{ contract_address }}&method_name={{ method.name }}&block_height={{ block_height }}"
+                            hx-trigger="load"></pre>
+                    </div>
+                    {% else %}
+                    <div id="{{ method.name }}-read" class="flex flex-col gap-4 px-4 py-6">
+                        <p>
+                            {{ loop.index }}. <span class="font-bold">{{ method.name }}</span> &rarr;
+                            {{ method.outputs[0].type }}
+                        </p>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="h-full overflow-y-auto flex flex-col border-2 border-gray-700 divide-y-2 divide-gray-700">
+        <header class="p-4 flex justify-between">
+            <h2 class="font-bold text-lg">Write Methods ({{ write_methods|length }})</h2>
+            <button _="on click toggle .hidden on #write-methods-list then toggle .rotate-180 on me">&#9660;</button>
+        </header>
+        <div id="write-methods-list" class="p-4 hidden">
+            <p class="break-normal">
+                {% for method in write_methods %}<a class="hover:underline hover:font-bold hover:text-cyan-500"
+                    href="#{{ method.name }}-write">{{ method.name }}</a>{% if not loop.last %}, {% endif %}{% endfor %}
+            </p>
+        </div>
+        <div class="overflow-y-auto flex-1">
+            <div class="overflow-y-auto">
+                <div id="write-methods" class="overflow-y-auto h-full divide-y divide-gray-700">
+                    {% for method in write_methods %}
+                    <div id="{{ method.name }}-write" class="flex flex-col gap-4 px-4 py-6">
+                        <p>
+                            {{ loop.index }}. <span class="font-bold">{{ method.name }}</span>
+                        </p>
+                        {% set inputs = method.inputs %}
+                        {% if inputs|length > 0 %}
+                        <form id="{{ method.name }}-params"
+                            hx-post="/tx/?contract_address={{ contract_address }}&method_name={{ method.name }}"
+                            hx-indicator="#{{ method.name }}-loading" hx-target="#{{ method.name }}-tx-result"
+                            class="flex gap-4 flex-wrap items-center">
+                            {% for input in inputs %}
+                            {% set input_width = ([input.name, " ", input.type]|join)|length %}
+                            <div class="w-[{{ input_width + 6 }}ch] font-mono">
+                                <input class="w-full  border border-gray-800 bg-black px-4 py-2" type="text"
+                                    id="{{ input.name }}" name="{{ input.name }}"
+                                    placeholder="{{ input.name }} ({{ input.type }})" required>
+                                <input type="hidden" id="{{ input.name }}:type" name="{{ input.name }}:type"
+                                    value="{{ input.type }}">
+                            </div>
+                            {% endfor %}
+                            <button class="px-4 py-2 bg-cyan-700 text-gray-100">Send Tx</button>
+                            <div id="{{ method.name }}-loading" class="pointer-events-none">
+                                <svg class="htmx-indicator h-5 text-gray-400 bg-gray-900 fill-current"
+                                    viewBox="0 0 135 140" xmlns="http://www.w3.org/2000/svg" fill="#fff">
+                                    <rect y="10" width="15" height="120" rx="6">
+                                        <animate attributeName="height" begin="0.5s" dur="1s"
+                                            values="120;110;100;90;80;70;60;50;40;140;120" calcMode="linear"
+                                            repeatCount="indefinite" />
+                                        <animate attributeName="y" begin="0.5s" dur="1s"
+                                            values="10;15;20;25;30;35;40;45;50;0;10" calcMode="linear"
+                                            repeatCount="indefinite" />
+                                    </rect>
+                                    <rect x="30" y="10" width="15" height="120" rx="6">
+                                        <animate attributeName="height" begin="0.25s" dur="1s"
+                                            values="120;110;100;90;80;70;60;50;40;140;120" calcMode="linear"
+                                            repeatCount="indefinite" />
+                                        <animate attributeName="y" begin="0.25s" dur="1s"
+                                            values="10;15;20;25;30;35;40;45;50;0;10" calcMode="linear"
+                                            repeatCount="indefinite" />
+                                    </rect>
+                                    <rect x="60" width="15" height="140" rx="6">
+                                        <animate attributeName="height" begin="0s" dur="1s"
+                                            values="120;110;100;90;80;70;60;50;40;140;120" calcMode="linear"
+                                            repeatCount="indefinite" />
+                                        <animate attributeName="y" begin="0s" dur="1s"
+                                            values="10;15;20;25;30;35;40;45;50;0;10" calcMode="linear"
+                                            repeatCount="indefinite" />
+                                    </rect>
+                                    <rect x="90" y="10" width="15" height="120" rx="6">
+                                        <animate attributeName="height" begin="0.25s" dur="1s"
+                                            values="120;110;100;90;80;70;60;50;40;140;120" calcMode="linear"
+                                            repeatCount="indefinite" />
+                                        <animate attributeName="y" begin="0.25s" dur="1s"
+                                            values="10;15;20;25;30;35;40;45;50;0;10" calcMode="linear"
+                                            repeatCount="indefinite" />
+                                    </rect>
+                                    <rect x="120" y="10" width="15" height="120" rx="6">
+                                        <animate attributeName="height" begin="0.5s" dur="1s"
+                                            values="120;110;100;90;80;70;60;50;40;140;120" calcMode="linear"
+                                            repeatCount="indefinite" />
+                                        <animate attributeName="y" begin="0.5s" dur="1s"
+                                            values="10;15;20;25;30;35;40;45;50;0;10" calcMode="linear"
+                                            repeatCount="indefinite" />
+                                    </rect>
+                                </svg>
+                            </div>
+                        </form>
+                        {{ method }}
+                        <pre id="{{ method.name }}-tx-result" _="on htmx:afterSettle js hljs.highlightAll()"></pre>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

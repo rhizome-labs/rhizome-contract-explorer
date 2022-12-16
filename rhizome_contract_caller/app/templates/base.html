@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <!--
+        ██████╗ ██╗  ██╗██╗███████╗ ██████╗ ███╗   ███╗███████╗
+        ██╔══██╗██║  ██║██║╚══███╔╝██╔═══██╗████╗ ████║██╔════╝
+        ██████╔╝███████║██║  ███╔╝ ██║   ██║██╔████╔██║█████╗  
+        ██╔══██╗██╔══██║██║ ███╔╝  ██║   ██║██║╚██╔╝██║██╔══╝  
+        ██║  ██║██║  ██║██║███████╗╚██████╔╝██║ ╚═╝ ██║███████╗
+        ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚══════╝ ╚═════╝ ╚═╝     ╚═╝╚══════╝
+        -->
+        <title>RHIZOME Contract Explorer</title>
+        <meta name="viewport" content="width=device-widt1h, initial-scale=1, maximum-scale=1" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://unpkg.com/htmx.org@1.7.0/dist/htmx.min.js"></script>
+        <script src="https://unpkg.com/hyperscript.org@0.9.5"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+        <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github-dark.min.css">
+
+    </head>
+
+    <!--<body class="bg-black text-gray-100 font-mono">
+        <main class="flex flex-col max-h-screen h-screen box-border">
+            <div id="container" class="flex flex-col gap-4 h-full">
+                <header>
+                    <h1 class="text-2xl font-bold">RHIZOME</h1>
+                </header>
+                
+                <header>
+                    <h1 class="text-2xl font-bold">RHIZOME</h1>
+                </header>
+            </div>
+        </main>
+    </body>-->
+
+    <body class="bg-black text-gray-200 font-mono">
+        <main class="flex flex-col max-h-screen h-screen box-border">
+            <header>
+                <h1 class="text-2xl font-bold p-4">RHIZOME</h1>
+            </header>
+            <div class="flex-1 px-4 gap-4 flex flex-col h-full overflow-y-auto">
+                {% block container %}{% endblock %}
+            </div>
+            <footer class="flex justify-between items-center p-4">
+                <p class="text-sm text-gray-400">
+                    Developed by <a class="underline hover:no-underline" href="https://rhizome.dev">RHIZOME</a>
+                </p>
+                <div hx-get="/latest-block/" hx-trigger="load, every 2s"></div>
+            </footer>
+        </main>
+    </body>
+
+</html>
