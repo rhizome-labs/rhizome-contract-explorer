@@ -17,4 +17,4 @@ RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 COPY ./rhizome_contract_explorer /code/rhizome_contract_explorer
 
 # Start application
-CMD ["gunicorn", "tools_rhizome_dev.app.main:app", "--workers", "4", "--worker-class", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8080"]
+CMD ["gunicorn", "rhizome_contract_explorer.app.main:app", "--workers", "4", "--worker-class", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8080"]
