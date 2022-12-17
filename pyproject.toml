@@ -4,14 +4,13 @@ version = "0.1.0"
 description = ""
 authors = ["Brian Li <brian@brianli.com>"]
 readme = "README.md"
-packages = [{include = "rhizome_contract_explorer"}]
 
 [tool.poetry.dependencies]
-python = "3.10.8"
+python = "^3.11"
 iconsdk = "^2.2.0"
 fastapi = "^0.88.0"
 python-dotenv = "^0.21.0"
-uvicorn = "^0.20.0"
+uvicorn = {extras = ["standard"], version = "^0.20.0"}
 jinja2 = "^3.1.2"
 python-multipart = "^0.0.5"
 yarl = "^1.8.2"

@@ -1,2 +1,1 @@
-npx tailwindcss -i ./rhizome_contract_explorer/app/css/main.css -o ./rhizome_contract_explorer/app/static/style.css --minify --watch &
 uvicorn rhizome_contract_explorer.app.main:app --reload --port 8001
