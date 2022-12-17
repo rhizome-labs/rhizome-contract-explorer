@@ -188,7 +188,6 @@ async def post_call(
 
     # Parse form data.
     form_data = await request.form()
-    print(form_data)
 
     # Only parse form data is there is form data to parse.
     if len(form_data) > 0:
@@ -220,8 +219,13 @@ async def post_call(
     # Initialize Icx instance.
     icx = Icx()
 
-    # Build and send transaction.
-    result = icx.call(contract_address, method_name, params, height=block_height)
+    try:
+        result = icx.call(contract_address, method=method_name, height=block_height)
+    except JSONRPCException as e:
+        result = e.args[0]
+        is_error = True
+
+    is_json = False
 
     if isinstance(result, str):
         if result.startswith("0x"):
@@ -239,6 +243,8 @@ async def post_call(
         {
             "request": request,
             "result": result,
+            "is_json": is_json,
+            "is_error": is_error,
         },
     )
 

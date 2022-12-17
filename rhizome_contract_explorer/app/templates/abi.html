@@ -89,7 +89,7 @@
                             </div>
                         </form>
                         <pre id="{{ method.name }}-call-result" class="hidden"
-                            _="on htmx:afterSettle js hljs.highlightAll() then remove .hidden from me"></pre>
+                            _="on htmx:afterSettle remove .hidden from me then js hljs.highlightAll()"></pre>
                         {% endif %}
                     </div>
                     {% endfor %}
@@ -181,7 +181,7 @@
                             </div>
                         </form>
                         <pre id="{{ method.name }}-tx-result" class="hidden"
-                            _="on htmx:afterSettle js hljs.highlightAll() then remove .hidden from me"></pre>
+                            _="on htmx:afterSettle remove .hidden from me then js hljs.highlightAll()"></pre>
                     </div>
                     {% endfor %}
                 </div>
