@@ -1,11 +1,11 @@
-<div class="grid h-full grid-cols-2 gap-4 overflow-y-auto">
+<div class="lg:grid-cols-2 lg:h-full grid grid-cols-1 gap-4 overflow-y-auto">
     <div class="flex flex-col h-full overflow-y-auto border-2 border-gray-700 divide-y-2 divide-gray-700">
-        <header class="flex justify-between p-4">
+        <header class="flex justify-between px-4 py-3">
             <h2 class="text-lg font-bold">Read Methods ({{ read_methods|length }})</h2>
             <button _="on click toggle .hidden on #read-methods-list then toggle .rotate-180 on me">&#9660;</button>
         </header>
         <!-- Read methods TOC. -->
-        <div id="read-methods-list" class="hidden p-4 duration-500 ease-in-out">
+        <div id="read-methods-list" class="hidden px-4 py-3 duration-500 ease-in-out">
             <p class="break-normal">
                 {% for method in read_methods %}<a class="hover:underline hover:font-bold hover:text-cyan-500"
                     href="#{{ method.name }}-read">{{ method.name }}</a>{% if not loop.last %}, {% endif %}{% endfor %}
@@ -15,37 +15,94 @@
             <div class="overflow-y-auto">
                 <div id="read-methods" class="h-full overflow-y-auto divide-y divide-gray-700">
                     {% for method in read_methods %}
-                    <!-- Read methods with no params. -->
-                    {% if method.inputs|length == 0 %}
                     <div id="{{ method.name }}-read" class="flex flex-col gap-4 px-4 py-6">
                         <p>
                             {{ loop.index }}. <span class="font-bold">{{ method.name }}</span> &rarr;
                             {{ method.outputs[0].type }}
                         </p>
-                        <pre class="hidden" _="on htmx:afterSettle remove .hidden from me then js hljs.highlightAll()"
-                            hx-get="/call/?api_endpoint={{ api_endpoint }}&network_id={{ network_id }}&contract_address={{ contract_address }}&method_name={{ method.name }}&block_height={{ block_height }}"
-                            hx-trigger="load"></pre>
+                        {% set inputs = method.inputs %}
+                        {% if inputs|length == 0 %}
+                        <pre id="{{ method.name }}-call-result" class="hidden"
+                            hx-get="/call/?contract_address={{ contract_address }}&method_name={{ method.name }}&block_height={{ block_height }}"
+                            hx-trigger="load"
+                            _="on htmx:afterSettle remove .hidden from me then js hljs.highlightAll()"></pre>
+                        {% else %}
+                        <form id="{{ method.name }}-params"
+                            hx-post="/call/?contract_address={{ contract_address }}&method_name={{ method.name }}&block_height={{ block_height }}"
+                            hx-indicator="#{{ method.name }}-loading" hx-target="#{{ method.name }}-call-result"
+                            class="flex flex-wrap items-center gap-4">
+                            {% for input in inputs %}
+                            {% set input_width = ([input.name, " ", input.type]|join)|length %}
+                            <div class="w-[{{ input_width + 6 }}ch] font-mono">
+                                <input class="w-full px-4 py-2 bg-black border border-gray-800" type="text"
+                                    id="{{ input.name }}" name="{{ input.name }}"
+                                    placeholder="{{ input.name }} ({{ input.type }})" required>
+                                <input type="hidden" id="{{ input.name }}:type" name="{{ input.name }}:type"
+                                    value="{{ input.type }}">
+                            </div>
+                            {% endfor %}
+                            <button class="bg-cyan-700 hover:bg-cyan-800 px-4 py-2 text-gray-100">Query</button>
+                            <div id="{{ method.name }}-loading" class="pointer-events-none">
+                                <svg class="htmx-indicator h-5 text-gray-400 fill-current" viewBox="0 0 135 140"
+                                    xmlns="http://www.w3.org/2000/svg" fill="#fff">
+                                    <rect y="10" width="15" height="120" rx="6">
+                                        <animate attributeName="height" begin="0.5s" dur="1s"
+                                            values="120;110;100;90;80;70;60;50;40;140;120" calcMode="linear"
+                                            repeatCount="indefinite" />
+                                        <animate attributeName="y" begin="0.5s" dur="1s"
+                                            values="10;15;20;25;30;35;40;45;50;0;10" calcMode="linear"
+                                            repeatCount="indefinite" />
+                                    </rect>
+                                    <rect x="30" y="10" width="15" height="120" rx="6">
+                                        <animate attributeName="height" begin="0.25s" dur="1s"
+                                            values="120;110;100;90;80;70;60;50;40;140;120" calcMode="linear"
+                                            repeatCount="indefinite" />
+                                        <animate attributeName="y" begin="0.25s" dur="1s"
+                                            values="10;15;20;25;30;35;40;45;50;0;10" calcMode="linear"
+                                            repeatCount="indefinite" />
+                                    </rect>
+                                    <rect x="60" width="15" height="140" rx="6">
+                                        <animate attributeName="height" begin="0s" dur="1s"
+                                            values="120;110;100;90;80;70;60;50;40;140;120" calcMode="linear"
+                                            repeatCount="indefinite" />
+                                        <animate attributeName="y" begin="0s" dur="1s"
+                                            values="10;15;20;25;30;35;40;45;50;0;10" calcMode="linear"
+                                            repeatCount="indefinite" />
+                                    </rect>
+                                    <rect x="90" y="10" width="15" height="120" rx="6">
+                                        <animate attributeName="height" begin="0.25s" dur="1s"
+                                            values="120;110;100;90;80;70;60;50;40;140;120" calcMode="linear"
+                                            repeatCount="indefinite" />
+                                        <animate attributeName="y" begin="0.25s" dur="1s"
+                                            values="10;15;20;25;30;35;40;45;50;0;10" calcMode="linear"
+                                            repeatCount="indefinite" />
+                                    </rect>
+                                    <rect x="120" y="10" width="15" height="120" rx="6">
+                                        <animate attributeName="height" begin="0.5s" dur="1s"
+                                            values="120;110;100;90;80;70;60;50;40;140;120" calcMode="linear"
+                                            repeatCount="indefinite" />
+                                        <animate attributeName="y" begin="0.5s" dur="1s"
+                                            values="10;15;20;25;30;35;40;45;50;0;10" calcMode="linear"
+                                            repeatCount="indefinite" />
+                                    </rect>
+                                </svg>
+                            </div>
+                        </form>
+                        <pre id="{{ method.name }}-call-result" class="hidden"
+                            _="on htmx:afterSettle js hljs.highlightAll() then remove .hidden from me"></pre>
+                        {% endif %}
                     </div>
-                    <!-- Read methods with params. -->
-                    {% else %}
-                    <div id="{{ method.name }}-read" class="flex flex-col gap-4 px-4 py-6">
-                        <p>
-                            {{ loop.index }}. <span class="font-bold">{{ method.name }}</span> &rarr;
-                            {{ method.outputs[0].type }}
-                        </p>
-                    </div>
-                    {% endif %}
                     {% endfor %}
                 </div>
             </div>
         </div>
     </div>
     <div class="flex flex-col h-full overflow-y-auto border-2 border-gray-700 divide-y-2 divide-gray-700">
-        <header class="flex justify-between p-4">
+        <header class="flex justify-between px-4 py-3">
             <h2 class="text-lg font-bold">Write Methods ({{ write_methods|length }})</h2>
             <button _="on click toggle .hidden on #write-methods-list then toggle .rotate-180 on me">&#9660;</button>
         </header>
-        <div id="write-methods-list" class="hidden p-4">
+        <div id="write-methods-list" class="hidden px-4 py-3">
             <p class="break-normal">
                 {% for method in write_methods %}<a class="hover:underline hover:font-bold hover:text-cyan-500"
                     href="#{{ method.name }}-write">{{ method.name }}</a>{% if not loop.last %}, {% endif %}{% endfor %}
@@ -76,9 +133,7 @@
                             </div>
                             {% endfor %}
                             {% endif %}
-                            {% if mode == "read-write" %}
                             <button class="bg-cyan-700 hover:bg-cyan-800 px-4 py-2 text-gray-100">Send Tx</button>
-                            {% endif %}
                             <div id="{{ method.name }}-loading" class="pointer-events-none">
                                 <svg class="htmx-indicator h-5 text-gray-400 fill-current" viewBox="0 0 135 140"
                                     xmlns="http://www.w3.org/2000/svg" fill="#fff">
@@ -126,7 +181,7 @@
                             </div>
                         </form>
                         <pre id="{{ method.name }}-tx-result" class="hidden"
-                            _="on htmx:afterSettle remove .hidden from me then js hljs.highlightAll()"></pre>
+                            _="on htmx:afterSettle js hljs.highlightAll() then remove .hidden from me"></pre>
                     </div>
                     {% endfor %}
                 </div>

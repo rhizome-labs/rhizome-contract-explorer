@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block icx_address %}
+{% if icx_address and icx_balance %}
 <div id="icx-wallet" class="text-sm text-right">
     <p>
         <a href="https://tracker.rhizome.dev/address/{{ icx_address }}/" class="hover:underline font-bold"
@@ -8,24 +9,25 @@
     </p>
     <p>{{ icx_balance }} ICX</p>
 </div>
+{% endif %}
 {% endblock %}
 
 {% block container %}
 <div>
     <form hx-post="/abi/" hx-target="#abi">
-        <div class="flex gap-4">
-            <div class="grow space-y-1 min-w-[42ch]">
+        <div class="lg:flex-row flex flex-col gap-4 py-3">
+            <div class="grow space-y-1 lg:min-w-[42ch]">
                 <input type="text" name="contract_address" id="contract-address"
-                    class="focus:border-indigo-500 focus:ring-indigo-500 block w-full p-4 bg-black border-2 border-gray-700"
+                    class="focus:border-indigo-500 focus:ring-indigo-500 block w-full px-4 py-3 bg-black border-2 border-gray-700"
                     placeholder="Contract Address" {% if contract_address %}value="{{ contract_address }}" {% endif %}>
             </div>
             <div class="space-y-1">
                 <input type="text" name="block_height" id="block-height"
-                    class="p-4 block max-w-[24ch] border-gray-700 border-2 bg-black focus:border-indigo-500 focus:ring-indigo-500"
+                    class="px-4 py-3 block w-full lg:max-w-[24ch] border-gray-700 border-2 bg-black focus:border-indigo-500 focus:ring-indigo-500"
                     placeholder="Block Height" {% if block_height %}value="{{ block_height }}" {% endif %}>
             </div>
             <button
-                class="btn btn-default hover:border-cyan-700 hover:bg-cyan-700 hover:text-gray-50 px-4 py-3 font-bold text-gray-900 bg-gray-200 border-2 border-gray-200">
+                class="btn btn-default border-cyan-700 bg-cyan-700 hover:text-gray-50 hover:bg-cyan-800 px-4 py-3 font-bold border-2">
                 Submit
             </button>
         </div>

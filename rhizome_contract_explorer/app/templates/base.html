@@ -25,7 +25,9 @@
     <body class="font-mono text-gray-200 bg-black">
         <main class="box-border flex flex-col h-screen max-h-screen">
             <header class="flex items-center justify-between p-4">
-                <h1 class="text-2xl font-bold">RHIZOME</h1>
+                <h1 class="text-2xl font-bold">
+                    <a href="/" class="hover:underline">RHIZOME</a>
+                </h1>
                 {% block icx_address %}{% endblock %}
             </header>
             <div class="flex flex-col flex-1 h-full gap-4 px-4 overflow-y-auto">
@@ -35,7 +37,7 @@
                 <p class="text-sm text-gray-400">
                     Developed by <a class="hover:no-underline underline" href="https://rhizome.dev">RHIZOME</a>
                 </p>
-                <!--<div hx-get="/latest-block/" hx-trigger="load, every 2s"></div>-->
+                <div hx-get="/latest-block/" hx-trigger="load"></div>
             </footer>
         </main>
     </body>

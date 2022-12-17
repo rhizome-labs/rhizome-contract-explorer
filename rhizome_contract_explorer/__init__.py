@@ -1,24 +1,34 @@
 import os
 from datetime import datetime
-from functools import lru_cache
 
 from dotenv import dotenv_values
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 
+from rhizome_contract_explorer.app.config import Config
 
-# Load environment variables.
-@lru_cache(maxsize=1)
-def env():
-    return dict(dotenv_values())
+
+# Load private key.
+def load_private_key() -> str | None:
+    env = dict(dotenv_values())
+    try:
+        private_key = env["PRIVATE_KEY"]
+        return private_key
+    except KeyError:
+        return None
 
 
 # Load Jinja2 templates
-@lru_cache(maxsize=1)
 def load_templates():
     return Jinja2Templates(directory=f"{os.path.dirname(__file__)}/app/templates")
 
 
-ENV = env()
+CONFIG = Config.load_config()
 TEMPLATES = load_templates()
 CURRENT_YEAR = datetime.now().year
+
+PK = load_private_key()
+if PK is None:
+    MODE = "R"
+else:
+    MODE = "RW"

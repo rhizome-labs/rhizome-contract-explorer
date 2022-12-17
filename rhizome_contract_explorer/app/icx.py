@@ -15,15 +15,17 @@ from iconsdk.providers.http_provider import HTTPProvider
 from iconsdk.signed_transaction import SignedTransaction, Transaction
 from iconsdk.wallet.wallet import KeyWallet
 
-from rhizome_contract_explorer import ENV
+from rhizome_contract_explorer import CONFIG, MODE, PK
 
 
 class Icx:
     def __init__(self) -> None:
-        self.icon_service = self._get_icon_service(ENV["API_ENDPOINT"])
-        self.nid = int(ENV["NID"])
-        self.wallet = self._load_wallet()
-        self.wallet_address = self.wallet.get_address()
+        self.icon_service = self._get_icon_service(CONFIG.api_endpoint)
+        self.nid = CONFIG.network_id
+
+        if MODE == "RW":
+            self.wallet = self._load_wallet()
+            self.wallet_address = self.wallet.get_address()
 
     def call(
         self,
@@ -64,6 +66,17 @@ class Icx:
         """
         result = self.icon_service.get_score_api(contract_address, block_height)
         return result
+
+    def get_score_deploy_block(self, contract_address):
+        params = {"address": contract_address}
+        result = self.call(
+            "cx0000000000000000000000000000000000000001",
+            "getScoreStatus",
+            params,
+        )
+        deploy_tx_hash = result["current"]["deployTxHash"]
+        tx_result = self.icon_service.get_transaction_result(deploy_tx_hash)
+        return tx_result["blockHeight"]
 
     def _get_icon_service(self, api_endpoint: str) -> IconService:
         icon_service = IconService(HTTPProvider(api_endpoint, 3))
@@ -133,5 +146,5 @@ class Icx:
             return False
 
     def _load_wallet(self) -> KeyWallet:
-        wallet = KeyWallet.load(bytes.fromhex(ENV["PRIVATE_KEY"]))
+        wallet = KeyWallet.load(bytes.fromhex(PK))
         return wallet
