@@ -20,4 +20,5 @@ bash run.sh
 
 ## Notes
 
+* This project is set up to use Python 3.11 – the latest version of Python. If you do not have Python 3.11 installed on your computer, we recommend insalling pyenv to install and manage a new installation of Python 3.11.
 * If no private key is set, RHIZOME Contract Explorer will operate in "read-only" mode. In this mode, the application can only query the blockchain.
