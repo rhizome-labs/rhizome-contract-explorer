@@ -1,26 +1,31 @@
 {% extends "base.html" %}
 
+{% block icx_address %}
+<div id="icx-wallet" class="text-sm text-right">
+    <p>
+        <a href="https://tracker.rhizome.dev/address/{{ icx_address }}/" class="hover:underline font-bold"
+            target="_blank">{{ icx_address[:8] }}…{{ icx_address[-8:] }}</a>
+    </p>
+    <p>{{ icx_balance }} ICX</p>
+</div>
+{% endblock %}
+
 {% block container %}
 <div>
     <form hx-post="/abi/" hx-target="#abi">
         <div class="flex gap-4">
             <div class="grow space-y-1 min-w-[42ch]">
-                <input type="text" name="contractAddress" id="contract-address"
-                    class="p-4 block w-full border-gray-700 border-2 bg-black focus:border-indigo-500 focus:ring-indigo-500"
+                <input type="text" name="contract_address" id="contract-address"
+                    class="focus:border-indigo-500 focus:ring-indigo-500 block w-full p-4 bg-black border-2 border-gray-700"
                     placeholder="Contract Address" {% if contract_address %}value="{{ contract_address }}" {% endif %}>
             </div>
             <div class="space-y-1">
-                <input type="text" name="blockHeight" id="block-height"
+                <input type="text" name="block_height" id="block-height"
                     class="p-4 block max-w-[24ch] border-gray-700 border-2 bg-black focus:border-indigo-500 focus:ring-indigo-500"
                     placeholder="Block Height" {% if block_height %}value="{{ block_height }}" {% endif %}>
             </div>
-            <div class="space-y-1">
-                <input type="text" name="timestamp" id="timestamp"
-                    class="p-4 block max-w-[24ch] border-gray-700 border-2 bg-black focus:border-indigo-500 focus:ring-indigo-500"
-                    placeholder="Timestamp" {% if timestamp %}value="{{ timestamp }}" {% endif %}>
-            </div>
             <button
-                class="btn btn-default border-2 border-gray-200 hover:border-cyan-700 bg-gray-200 px-4 text-gray-900 font-bold py-3 hover:bg-cyan-700 hover:text-gray-50">
+                class="btn btn-default hover:border-cyan-700 hover:bg-cyan-700 hover:text-gray-50 px-4 py-3 font-bold text-gray-900 bg-gray-200 border-2 border-gray-200">
                 Submit
             </button>
         </div>

@@ -9,7 +9,7 @@ from iconsdk.builder.transaction_builder import (
     CallTransactionBuilder,
     TransactionBuilder,
 )
-from iconsdk.exception import JSONRPCException, KeyStoreException
+from iconsdk.exception import JSONRPCException
 from iconsdk.icon_service import IconService
 from iconsdk.providers.http_provider import HTTPProvider
 from iconsdk.signed_transaction import SignedTransaction, Transaction
@@ -35,6 +35,10 @@ class Icx:
         call = CallBuilder().to(to).method(method).params(params).height(height).build()
         result = self.icon_service.call(call)
         return result
+
+    def get_balance(self, address):
+        balance = self.icon_service.get_balance(address)
+        return balance
 
     def get_block(
         self,

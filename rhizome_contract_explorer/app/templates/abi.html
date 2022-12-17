@@ -76,10 +76,12 @@
                             </div>
                             {% endfor %}
                             {% endif %}
-                            <button class="bg-cyan-700 px-4 py-2 text-gray-100">Send Tx</button>
+                            {% if mode == "read-write" %}
+                            <button class="bg-cyan-700 hover:bg-cyan-800 px-4 py-2 text-gray-100">Send Tx</button>
+                            {% endif %}
                             <div id="{{ method.name }}-loading" class="pointer-events-none">
-                                <svg class="htmx-indicator h-5 text-gray-400 bg-gray-900 fill-current"
-                                    viewBox="0 0 135 140" xmlns="http://www.w3.org/2000/svg" fill="#fff">
+                                <svg class="htmx-indicator h-5 text-gray-400 fill-current" viewBox="0 0 135 140"
+                                    xmlns="http://www.w3.org/2000/svg" fill="#fff">
                                     <rect y="10" width="15" height="120" rx="6">
                                         <animate attributeName="height" begin="0.5s" dur="1s"
                                             values="120;110;100;90;80;70;60;50;40;140;120" calcMode="linear"

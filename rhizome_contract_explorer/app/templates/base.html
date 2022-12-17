@@ -20,27 +20,13 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
         <link rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github-dark.min.css">
-
     </head>
-
-    <!--<body class="font-mono text-gray-100 bg-black">
-        <main class="box-border flex flex-col h-screen max-h-screen">
-            <div id="container" class="flex flex-col h-full gap-4">
-                <header>
-                    <h1 class="text-2xl font-bold">RHIZOME</h1>
-                </header>
-                
-                <header>
-                    <h1 class="text-2xl font-bold">RHIZOME</h1>
-                </header>
-            </div>
-        </main>
-    </body>-->
 
     <body class="font-mono text-gray-200 bg-black">
         <main class="box-border flex flex-col h-screen max-h-screen">
-            <header>
-                <h1 class="p-4 text-2xl font-bold">RHIZOME</h1>
+            <header class="flex items-center justify-between p-4">
+                <h1 class="text-2xl font-bold">RHIZOME</h1>
+                {% block icx_address %}{% endblock %}
             </header>
             <div class="flex flex-col flex-1 h-full gap-4 px-4 overflow-y-auto">
                 {% block container %}{% endblock %}
@@ -49,7 +35,7 @@
                 <p class="text-sm text-gray-400">
                     Developed by <a class="hover:no-underline underline" href="https://rhizome.dev">RHIZOME</a>
                 </p>
-                <div hx-get="/latest-block/" hx-trigger="load"></div>
+                <!--<div hx-get="/latest-block/" hx-trigger="load, every 2s"></div>-->
             </footer>
         </main>
     </body>

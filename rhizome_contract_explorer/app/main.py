@@ -1,8 +1,10 @@
 import json
 import os
+from decimal import Decimal
 
 from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.staticfiles import StaticFiles
+from iconsdk.exception import JSONRPCException
 
 from rhizome_contract_explorer import ENV, TEMPLATES
 from rhizome_contract_explorer.app.icx import Icx
@@ -32,6 +34,10 @@ async def get_index(
     # If network is not provided, check environment variable.
     network_id = int(ENV.get("NID"))
 
+    # Initialize Icx instance.
+    icx = Icx()
+    icx_balance = icx.get_balance(icx.wallet_address)
+
     return TEMPLATES.TemplateResponse(
         "index.html",
         {
@@ -41,17 +47,30 @@ async def get_index(
             "block_height": block_height,
             "api_endpoint": api_endpoint,
             "network_id": network_id,
+            "icx_address": icx.wallet_address,
+            "icx_balance": round(Decimal(icx_balance) / Decimal(10**18), 4),
         },
     )
 
 
 @app.post("/abi/")
 async def post_abi(request: Request):
+
+    if "PRIVATE_KEY" in ENV.keys():
+        mode = "read-write"
+    else:
+        mode = "read-only"
+
     # Parse incoming form data.
     form_data = await request.form()
 
     # Get contract address from form data.
-    contract_address = form_data["contractAddress"]
+    try:
+        block_height = int(form_data["block_height"])
+    except:
+        block_height = None
+
+    contract_address = form_data["contract_address"]
 
     if len(contract_address) != 42 or not contract_address.startswith("cx"):
         raise HTTPException(
@@ -61,7 +80,16 @@ async def post_abi(request: Request):
 
     icx = Icx()
 
-    abi = icx.get_score_api(contract_address)
+    try:
+        abi = icx.get_score_api(contract_address, block_height)
+    except JSONRPCException as e:
+        return TEMPLATES.TemplateResponse(
+            "error.html",
+            {
+                "request": request,
+                "message": f"{contract_address} did not exist at Block #{block_height:,}",
+            },
+        )
 
     read_methods = [method for method in abi if method.get("readonly") == "0x1"]
     write_methods = [method for method in abi if method.get("readonly") != "0x1"]
@@ -71,9 +99,10 @@ async def post_abi(request: Request):
         {
             "request": request,
             "contract_address": contract_address,
-            "block_height": -1,
+            "block_height": block_height,
             "read_methods": sorted(read_methods, key=lambda x: x["name"]),
             "write_methods": sorted(write_methods, key=lambda x: x["name"]),
+            "mode": mode,
         },
     )
 
@@ -101,10 +130,17 @@ def get_call(
     request: Request,
     contract_address: str,
     method_name: str,
-    block_height: int = None,
+    block_height: int | str = None,
 ):
+    # Convert block height from string None to a proper None instance.
+    block_height = None if block_height == "None" else block_height
+
     icx = Icx()
-    result = icx.call(contract_address, method=method_name)
+
+    try:
+        result = icx.call(contract_address, method=method_name, height=block_height)
+    except JSONRPCException:
+        return "<p>ERROR!</p>"
 
     is_json = False
 
