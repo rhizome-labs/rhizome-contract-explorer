@@ -34,9 +34,20 @@
                 {% block container %}{% endblock %}
             </div>
             <footer class="flex items-center justify-between p-4">
-                <p class="text-sm text-gray-400">
-                    Developed by <a class="hover:no-underline underline" href="https://rhizome.dev">RHIZOME</a>
-                </p>
+                <div class="flex gap-4">
+                    <p class="text-sm text-gray-400">
+                        <a class="hover:underline"
+                            href="https://tracker.icon.community/address/hx4a43790d44b07909d20fbcc233548fc80f7a4067"
+                            target="_blank">Validator</a>
+                    </p>
+                    <p class="text-sm text-gray-400">
+                        <a class="hover:underline" href="https://twitter.com/rhizomelabs" target="_blank">Twitter</a>
+                    </p>
+                    <p class="text-sm text-gray-400">
+                        <a class="hover:underline" href="https://github.com/rhizome-labs/rhizome-contract-explorer"
+                            target="_blank">GitHub</a>
+                    </p>
+                </div>
                 <div hx-get="/latest-block/" hx-trigger="load, every 2s"></div>
             </footer>
         </main>
