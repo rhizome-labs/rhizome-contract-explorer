@@ -123,6 +123,7 @@ async def get_latest_block(request: Request):
         {
             "request": request,
             "block_height": f"{block_height:,}",
+            "block_refresh": CONFIG.block_refresh,
         },
     )
 

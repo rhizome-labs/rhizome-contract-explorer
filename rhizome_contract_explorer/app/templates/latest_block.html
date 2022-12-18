@@ -1,5 +1,5 @@
-<div id="latest-block" class="flex items-center gap-2" hx-get="/latest-block/" hx-trigger="load delay:2s"
-    hx-swap="outerHTML">
+<div id="latest-block" class="flex items-center gap-2" hx-get="/latest-block/"
+    hx-trigger="load delay:{{ block_refresh }}s" hx-swap="outerHTML">
     <p class="text-sm text-gray-400">{{ block_height }}</p>
     <div class="w-2.5 h-2.5 bg-green-400 rounded-full"></div>
 </div>
