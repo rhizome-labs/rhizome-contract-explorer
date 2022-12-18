@@ -115,11 +115,11 @@ async def post_abi(request: Request):
 
 
 @app.get("/latest-block/")
-def get_latest_block(request: Request):
+async def get_latest_block(request: Request):
     icx = Icx()
     block_height = icx.get_block(height_only=True)
     return TEMPLATES.TemplateResponse(
-        "block_height.html",
+        "latest_block.html",
         {
             "request": request,
             "block_height": f"{block_height:,}",
@@ -128,12 +128,12 @@ def get_latest_block(request: Request):
 
 
 @app.get("/validate-input/")
-def validate_input(request: Request, type: str):
+async def validate_input(request: Request, type: str):
     return
 
 
 @app.get("/call/")
-def get_call(
+async def get_call(
     request: Request,
     contract_address: str,
     method_name: str,

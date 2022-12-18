@@ -1,1 +1,1 @@
-uvicorn rhizome_contract_explorer.app.main:app --port 8001 --workers 4
+uvicorn rhizome_contract_explorer.app.main:app --reload --port 8001 --workers 4
