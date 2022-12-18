@@ -41,7 +41,9 @@
                                     value="{{ input.type }}">
                             </div>
                             {% endfor %}
-                            <button class="bg-cyan-700 hover:bg-cyan-800 px-4 py-2 text-gray-100">Query</button>
+                            <button class="bg-cyan-700 hover:bg-cyan-800 px-4 py-2 text-gray-100 font-bold">
+                                Query
+                            </button>
                             <div id="{{ method.name }}-loading" class="pointer-events-none">
                                 <svg class="htmx-indicator h-5 text-gray-400 fill-current" viewBox="0 0 135 140"
                                     xmlns="http://www.w3.org/2000/svg" fill="#fff">
@@ -133,7 +135,9 @@
                             </div>
                             {% endfor %}
                             {% endif %}
-                            <button class="bg-cyan-700 hover:bg-cyan-800 px-4 py-2 text-gray-100">Send Tx</button>
+                            <button class="bg-cyan-700 hover:bg-cyan-800 px-4 py-2 text-gray-100 font-bold">
+                                Send Tx
+                            </button>
                             <div id="{{ method.name }}-loading" class="pointer-events-none">
                                 <svg class="htmx-indicator h-5 text-gray-400 fill-current" viewBox="0 0 135 140"
                                     xmlns="http://www.w3.org/2000/svg" fill="#fff">
