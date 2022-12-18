@@ -12,12 +12,17 @@ async def get_index(
     contract_address: str = None,
     block_height: int = None,
 ):
+    icx = Icx()
+    score_name = icx.get_score_name(contract_address)
+    score_status = icx.get_score_status(contract_address)
     return TEMPLATES.TemplateResponse(
         "contract/index.html",
         {
             "request": request,
             "contract_address": contract_address,
             "block_height": block_height,
+            "score_name": score_name,
+            "score_status": score_status,
         },
     )
 
@@ -78,18 +83,19 @@ async def get_contract_methods(
     )
 
 
-@router.get("/{contract_address}/status/")
+@router.get("/{contract_address}/overview/")
 async def get_contract_methods(
     request: Request,
     contract_address: str = None,
 ):
     icx = Icx()
+    score_name = icx.get_score_name(contract_address)
     score_status = icx.get_score_status(contract_address)
-    print(score_status)
     return TEMPLATES.TemplateResponse(
-        "contract/score_status.html",
+        "contract/overview.html",
         {
             "request": request,
+            "score_name": score_name,
             "score_status": score_status,
         },
     )

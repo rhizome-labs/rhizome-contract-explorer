@@ -5,8 +5,33 @@
 
     <!-- Contract Overview -->
     <div id="contract-overview" class="p-4 border-4 border-gray-700 flex flex-col gap-4">
-        <h1 class="text-xl font-bold">{{ contract_address }}</h1>
-        <div id="contract-status" hx-get="/contract/{{ contract_address }}/status/" hx-trigger="load"></div>
+        <header>
+            <h1 class="text-2xl font-bold italic">{{ contract_address }}</h1>
+        </header>
+        <table class="table-auto w-fit">
+            {% if score_name %}
+            <tr>
+                <td class="font-bold pr-2 text-right">Name:</td>
+                <td>{{ score_name }}</td>
+            </tr>
+            {% endif %}
+            <tr class="">
+                <td class="font-bold pr-2 text-right">Status:</td>
+                <td>{{ score_status['current']['status']|title }}</td>
+            </tr>
+            <tr>
+                <td class="font-bold pr-2 text-right">Owner:</td>
+                <td>{{ score_status['owner'] }}</td>
+            </tr>
+            <tr>
+                <td class="font-bold pr-2 text-right">Deploy Tx:</td>
+                <td>{{ score_status['current']['deployTxHash'] }}</td>
+            </tr>
+            <tr>
+                <td class="font-bold pr-2 text-right">Audit Tx:</td>
+                <td>{{ score_status['current']['auditTxHash'] }}</td>
+            </tr>
+        </table>
     </div>
 
     <!-- Main Body -->

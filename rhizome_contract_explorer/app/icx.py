@@ -67,6 +67,11 @@ class Icx:
         result = self.icon_service.get_score_api(contract_address, block_height)
         return result
 
+    def get_score_name(self, contract_address: str, block_height: int = None) -> str:
+        result = self.call(contract_address, "name", height=block_height)
+        print(result)
+        return result
+
     def get_score_deploy_block(self, contract_address: str) -> int:
         params = {"address": contract_address}
         result = self.call(
