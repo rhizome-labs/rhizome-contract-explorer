@@ -40,8 +40,8 @@ async def get_contract_methods(
     write_methods = [method for method in abi if method.get("readonly") != "0x1"]
 
     # Sort methods by alphabetical order.
-    read_methods.sort(key=lambda x: x["name"])
-    write_methods.sort(key=lambda x: x["name"])
+    read_methods.sort(key=lambda x: x["name"].casefold())
+    write_methods.sort(key=lambda x: x["name"].casefold())
 
     return TEMPLATES.TemplateResponse(
         "contract/inspector.html",
@@ -68,8 +68,8 @@ async def get_contract_methods(
     write_methods = [method for method in abi if method.get("readonly") != "0x1"]
 
     # Sort methods by alphabetical order.
-    read_methods.sort(key=lambda x: x["name"])
-    write_methods.sort(key=lambda x: x["name"])
+    read_methods.sort(key=lambda x: x["name"].casefold())
+    write_methods.sort(key=lambda x: x["name"].casefold())
 
     return TEMPLATES.TemplateResponse(
         "contract/methods_list.html",
