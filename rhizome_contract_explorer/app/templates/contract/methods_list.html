@@ -1,0 +1,30 @@
+{% if filter == "read" %}
+<span id="methods-count" hx-swap-oob="True">({{ read_methods | length }})</span>
+{% for method in read_methods %}
+<li class="flex items-center gap-2">
+    <a href="#{{ method.name }}" class="hover:underline text-purple-500 font-bold">{{ method.name }}</a>
+</li>
+{% endfor %}
+
+{% elif filter == "write" %}
+<span id="methods-count" hx-swap-oob="True">({{ write_methods | length }})</span>
+{% for method in write_methods %}
+<li class="flex items-center gap-2">
+    <a href="#{{ method.name }}" class="hover:underline text-green-500 font-bold">{{ method.name }}</a>
+</li>
+{% endfor %}
+
+{% else %}
+<span id="methods-count" hx-swap-oob="True">({{ (read_methods + write_methods) | length }})</span>
+{% for method in read_methods %}
+<li class="flex items-center gap-2">
+    <a href="#{{ method.name }}" class="hover:underline text-purple-500 font-bold">{{ method.name }}</a>
+</li>
+{% endfor %}
+{% for method in write_methods %}
+<li class="flex items-center gap-2">
+    <a href="#{{ method.name }}" class="hover:underline text-green-500 font-bold">{{ method.name }}</a>
+</li>
+{% endfor %}
+
+{% endif %}

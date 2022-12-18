@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block icx_address %}
+{% if icx_address and icx_balance %}
+<div id="icx-wallet" class="text-sm text-right">
+    <p>
+        <a href="https://tracker.rhizome.dev/address/{{ icx_address }}/" class="hover:underline font-bold"
+            target="_blank">{{ icx_address[:8] }}…{{ icx_address[-8:] }}</a>
+    </p>
+    <p>{{ icx_balance }} ICX</p>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block container %}
+<div>
+    <form hx-post="/abi/" hx-target="#abi">
+        <div class="lg:flex-row flex flex-col gap-4 py-3">
+            <div class="grow space-y-1 lg:min-w-[42ch]">
+                <input type="text" name="contract_address" id="contract-address"
+                    class="focus:border-indigo-500 focus:ring-indigo-500 block w-full px-4 py-3 bg-black border-2 border-gray-700"
+                    placeholder="Contract Address" {% if contract_address %}value="{{ contract_address }}" {% endif %}>
+            </div>
+            <div class="space-y-1">
+                <input type="text" name="block_height" id="block-height"
+                    class="px-4 py-3 block w-full lg:max-w-[24ch] border-gray-700 border-2 bg-black focus:border-indigo-500 focus:ring-indigo-500"
+                    placeholder="Block Height" {% if block_height %}value="{{ block_height }}" {% endif %}>
+            </div>
+            <button
+                class="btn btn-default border-cyan-700 bg-cyan-700 hover:text-gray-50 hover:bg-cyan-800 px-4 py-3 font-bold border-2">
+                Submit
+            </button>
+        </div>
+    </form>
+</div>
+<div id="abi" class="h-full overflow-y-auto"></div>
+{% endblock %}

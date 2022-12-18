@@ -44,7 +44,7 @@ class Icx:
 
     def get_block(
         self,
-        block_height: int = "latest",
+        block_height: int = None,
         height_only: bool = False,
     ) -> dict | int:
         block = self.icon_service.get_block(block_height)
@@ -67,7 +67,7 @@ class Icx:
         result = self.icon_service.get_score_api(contract_address, block_height)
         return result
 
-    def get_score_deploy_block(self, contract_address):
+    def get_score_deploy_block(self, contract_address: str) -> int:
         params = {"address": contract_address}
         result = self.call(
             "cx0000000000000000000000000000000000000001",
@@ -77,6 +77,15 @@ class Icx:
         deploy_tx_hash = result["current"]["deployTxHash"]
         tx_result = self.icon_service.get_transaction_result(deploy_tx_hash)
         return tx_result["blockHeight"]
+
+    def get_score_status(self, contract_address: str) -> dict:
+        params = {"address": contract_address}
+        result = self.call(
+            "cx0000000000000000000000000000000000000001",
+            "getScoreStatus",
+            params,
+        )
+        return result
 
     def _get_icon_service(self, api_endpoint: str) -> IconService:
         icon_service = IconService(HTTPProvider(api_endpoint, 3))
