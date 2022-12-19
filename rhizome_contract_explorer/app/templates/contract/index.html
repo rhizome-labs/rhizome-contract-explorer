@@ -47,13 +47,13 @@
             <header class="flex flex-col p-4 border-b-4 border-gray-700 gap-2">
                 <h1 class="text-xl font-bold">Contract Methods</h1>
                 <div>
-                    <button class="text-sm font-bold bg-cyan-600 px-2 py-1 rounded-md hover:bg-cyan-700"
+                    <button class="text-sm font-bold bg-cyan-600 px-2 py-1 hover:bg-cyan-700"
                         hx-get="/contract/{{ contract_address }}/methods/?filter=all" hx-target="#methods-list">
                         ALL</button>
-                    <button class="text-sm font-bold bg-purple-600 px-2 py-1 rounded-md hover:bg-purple-700"
+                    <button class="text-sm font-bold bg-purple-600 px-2 py-1 hover:bg-purple-700"
                         hx-get="/contract/{{ contract_address }}/methods/?filter=read" hx-target="#methods-list">
                         READ</button>
-                    <button class="text-sm font-bold bg-green-600 px-2 py-1 rounded-md hover:bg-green-700"
+                    <button class="text-sm font-bold bg-green-600 px-2 py-1 hover:bg-green-700"
                         hx-get="/contract/{{ contract_address }}/methods/?filter=write" hx-target="#methods-list">
                         WRITE</button>
                 </div>
