@@ -1,5 +1,13 @@
 {% extends "base.html" %}
 
+{% block header %}
+<header class="flex items-center px-4 h-16 justify-between gap-4">
+    <h1 class="text-2xl font-bold">
+        <a href="/">RHIZOME</a>
+    </h1>
+</header>
+{% endblock %}
+
 {% block container %}
 <div id="container" class="flex flex-col gap-4 h-full w-full">
 
@@ -86,4 +94,18 @@
     </div>
 
 </div>
+{% endblock %}
+
+{% block footer %}
+<footer class="flex items-center justify-between px-4 h-16">
+    <ul class="flex gap-4">
+        <li class="text-gray-400 hover:underline">
+            <a href="https://github.com/rhizome-labs/rhizome-contract-explorer">GitHub</a>
+        </li>
+        <li class="text-gray-400 hover:underline">
+            <a href="https://twitter.com/rhizomelabs">Twitter</a>
+        </li>
+    </ul>
+    {% include "latest_block.html" %}
+</footer>
 {% endblock %}

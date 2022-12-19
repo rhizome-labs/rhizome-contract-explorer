@@ -33,25 +33,11 @@
 
     <body class="font-mono text-gray-200 bg-black">
         <div class="box-border flex flex-col h-screen max-h-screen">
-            <header class="flex items-center px-4 h-16 justify-between gap-4">
-                <h1 class="text-2xl font-bold">
-                    <a href="/">RHIZOME</a>
-                </h1>
-            </header>
+            {% block header %}{% endblock %}
             <main class="flex flex-col flex-1 h-full gap-4 px-4 w-full overflow-y-auto">
                 {% block container %}{% endblock %}
             </main>
-            <footer class="flex items-center justify-between px-4 h-16">
-                <ul class="flex gap-4">
-                    <li class="text-gray-400 hover:underline">
-                        <a href="https://github.com/rhizome-labs/rhizome-contract-explorer">GitHub</a>
-                    </li>
-                    <li class="text-gray-400 hover:underline">
-                        <a href="https://twitter.com/rhizomelabs">Twitter</a>
-                    </li>
-                </ul>
-                {% include "latest_block.html" %}
-            </footer>
+            {% block footer %}{% endblock %}
         </div>
     </body>
 
