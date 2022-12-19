@@ -20,11 +20,19 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
         <link rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github-dark.min.css">
+        <style>
+            input[type=search]::-ms-clear {  display: none; width : 0; height: 0; }
+            input[type=search]::-ms-reveal {  display: none; width : 0; height: 0; }
+            input[type="search"]::-webkit-search-decoration,
+            input[type="search"]::-webkit-search-cancel-button,
+            input[type="search"]::-webkit-search-results-button,
+            input[type="search"]::-webkit-search-results-decoration { display: none; }
+        </style>
     </head>
 
     <body class="font-mono text-gray-200 bg-black">
         <div class="box-border flex flex-col h-screen max-h-screen">
-            <header class="flex items-center px-4 h-16">
+            <header class="flex items-center px-4 h-16 justify-between gap-4">
                 <h1 class="text-2xl font-bold">
                     <a href="/">RHIZOME</a>
                 </h1>
