@@ -1,6 +1,7 @@
 from decimal import Decimal
 from functools import lru_cache
 from getpass import getpass
+from logging import log
 from time import sleep
 from typing import Tuple
 
@@ -23,6 +24,8 @@ class Icx:
         self.icon_service = self._get_icon_service(CONFIG.api_endpoint)
         self.nid = CONFIG.network_id
 
+        log(1, f"{self.icon_service, self.nid}")
+
         if MODE == "RW":
             self.wallet = self._load_wallet()
             self.wallet_address = self.wallet.get_address()
@@ -38,13 +41,22 @@ class Icx:
         result = self.icon_service.call(call)
         return result
 
-    def get_balance(self, address):
+    def get_balance(
+        self,
+        address: str,
+    ):
+        """
+        Returns the ICX balance of an address.
+
+        Args:
+            address: An ICX address.
+        """
         balance = self.icon_service.get_balance(address)
         return balance
 
     def get_block(
         self,
-        block_height: int = "latest",
+        block_height: int = None,
         height_only: bool = False,
     ) -> dict | int:
         block = self.icon_service.get_block(block_height)
@@ -67,7 +79,25 @@ class Icx:
         result = self.icon_service.get_score_api(contract_address, block_height)
         return result
 
-    def get_score_deploy_block(self, contract_address):
+    def get_score_name(
+        self,
+        contract_address: str,
+        block_height: int = None,
+    ) -> str | None:
+        """
+        Returns the name of a SCORE on the ICON blockchain.
+
+        Args:
+            contract_address: The contract to get the ABI for.
+            block_height: The block height to query.
+        """
+        try:
+            result = self.call(contract_address, "name", height=block_height)
+            return result
+        except JSONRPCException:
+            return None
+
+    def get_score_deploy_block(self, contract_address: str) -> int:
         params = {"address": contract_address}
         result = self.call(
             "cx0000000000000000000000000000000000000001",
@@ -77,6 +107,15 @@ class Icx:
         deploy_tx_hash = result["current"]["deployTxHash"]
         tx_result = self.icon_service.get_transaction_result(deploy_tx_hash)
         return tx_result["blockHeight"]
+
+    def get_score_status(self, contract_address: str) -> dict:
+        params = {"address": contract_address}
+        result = self.call(
+            "cx0000000000000000000000000000000000000001",
+            "getScoreStatus",
+            params,
+        )
+        return result
 
     def _get_icon_service(self, api_endpoint: str) -> IconService:
         icon_service = IconService(HTTPProvider(api_endpoint, 3))

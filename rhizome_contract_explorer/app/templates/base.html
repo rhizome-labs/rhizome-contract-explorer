@@ -20,37 +20,39 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
         <link rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github-dark.min.css">
+        <style>
+            html { font-size: 16px; }
+            input[type=search]::-ms-clear {  display: none; width : 0; height: 0; }
+            input[type=search]::-ms-reveal {  display: none; width : 0; height: 0; }
+            input[type="search"]::-webkit-search-decoration,
+            input[type="search"]::-webkit-search-cancel-button,
+            input[type="search"]::-webkit-search-results-button,
+            input[type="search"]::-webkit-search-results-decoration { display: none; }
+        </style>
     </head>
 
     <body class="font-mono text-gray-200 bg-black">
-        <main class="box-border flex flex-col h-screen max-h-screen">
-            <header class="flex items-center justify-between p-4">
+        <div class="box-border flex flex-col h-screen max-h-screen">
+            <header class="flex items-center px-4 h-16 justify-between gap-4">
                 <h1 class="text-2xl font-bold">
-                    <a href="/" class="hover:underline">RHIZOME</a>
+                    <a href="/">RHIZOME</a>
                 </h1>
-                {% block icx_address %}{% endblock %}
             </header>
-            <div class="flex flex-col flex-1 h-full gap-4 px-4 overflow-y-auto">
+            <main class="flex flex-col flex-1 h-full gap-4 px-4 w-full overflow-y-auto">
                 {% block container %}{% endblock %}
-            </div>
-            <footer class="flex items-center justify-between p-4">
-                <div class="flex gap-4">
-                    <p class="text-sm text-gray-400">
-                        <a class="hover:underline"
-                            href="https://tracker.icon.community/address/hx4a43790d44b07909d20fbcc233548fc80f7a4067"
-                            target="_blank">Validator</a>
-                    </p>
-                    <p class="text-sm text-gray-400">
-                        <a class="hover:underline" href="https://twitter.com/rhizomelabs" target="_blank">Twitter</a>
-                    </p>
-                    <p class="text-sm text-gray-400">
-                        <a class="hover:underline" href="https://github.com/rhizome-labs/rhizome-contract-explorer"
-                            target="_blank">GitHub</a>
-                    </p>
-                </div>
+            </main>
+            <footer class="flex items-center justify-between px-4 h-16">
+                <ul class="flex gap-4">
+                    <li class="text-gray-400 hover:underline">
+                        <a href="https://github.com/rhizome-labs/rhizome-contract-explorer">GitHub</a>
+                    </li>
+                    <li class="text-gray-400 hover:underline">
+                        <a href="https://twitter.com/rhizomelabs">Twitter</a>
+                    </li>
+                </ul>
                 {% include "latest_block.html" %}
             </footer>
-        </main>
+        </div>
     </body>
 
 </html>

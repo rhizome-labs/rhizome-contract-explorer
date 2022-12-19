@@ -33,7 +33,7 @@
                             class="flex flex-wrap items-center gap-4">
                             {% for input in inputs %}
                             {% set input_width = ([input.name, " ", input.type]|join)|length %}
-                            <div class="w-[{{ input_width + 6 }}ch] font-mono">
+                            <div class="font-mono grow w-full">
                                 <input class="w-full px-4 py-2 bg-black border border-gray-800" type="text"
                                     id="{{ input.name }}" name="{{ input.name }}"
                                     placeholder="{{ input.name }} ({{ input.type }})" required>
@@ -126,7 +126,7 @@
                             {% if inputs|length > 0 %}
                             {% for input in inputs %}
                             {% set input_width = ([input.name, " ", input.type]|join)|length %}
-                            <div class="w-[{{ input_width + 6 }}ch] font-mono">
+                            <div class="w-full grow font-mono">
                                 <input class="w-full px-4 py-2 bg-black border border-gray-800" type="text"
                                     id="{{ input.name }}" name="{{ input.name }}"
                                     placeholder="{{ input.name }} ({{ input.type }})" required>
