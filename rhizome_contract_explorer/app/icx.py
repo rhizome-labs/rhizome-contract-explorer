@@ -117,9 +117,16 @@ class Icx:
         )
         return result
 
-    def _get_icon_service(self, api_endpoint: str) -> IconService:
-        icon_service = IconService(HTTPProvider(api_endpoint, 3))
-        return icon_service
+    def get_logs(self, tx_hash: str) -> list:
+        """
+        Returns event logs for an ICX transaction.
+
+        Args:
+            tx_hash: The transaction hash for an ICX transaction.
+        """
+        tx_result = self.icon_service.get_transaction_result(tx_hash)
+        logs = tx_result["eventLogs"]
+        return logs
 
     def build_transaction(
         self,
@@ -164,7 +171,7 @@ class Icx:
         tx_hash = self.icon_service.send_transaction(signed_tx)
         if verify_result is True:
             for _ in range(10):
-                tx_result = self.is_transaction_successful(tx_hash)
+                tx_result = self._is_transaction_successful(tx_hash)
                 if tx_result is True:
                     return tx_hash
                 else:
@@ -172,7 +179,24 @@ class Icx:
                     continue
         return tx_hash
 
-    def is_transaction_successful(self, tx_hash: str) -> bool:
+    ####################
+    # INTERNAL METHODS #
+    ####################
+
+    def _get_icon_service(self, api_endpoint: str) -> IconService:
+        """
+        Returns an IconService object for the provided API endpoint.
+
+        Args:
+            api_endpoint: The URL or hostname of an ICON node.
+        """
+        icon_service = IconService(HTTPProvider(api_endpoint, 3))
+        return icon_service
+
+    def _is_transaction_successful(self, tx_hash: str) -> bool:
+        """
+        Checks whether a transaction is successful.
+        """
         try:
             result = self.icon_service.get_transaction_result(tx_hash)
             print(result)

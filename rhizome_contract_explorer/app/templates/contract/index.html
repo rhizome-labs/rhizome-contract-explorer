@@ -5,6 +5,9 @@
     <h1 class="text-2xl font-bold">
         <a href="/">RHIZOME</a>
     </h1>
+    {% if mode == "RW" %}
+    <div hx-get="/profile/" hx-trigger="load"></div>
+    {% endif %}
 </header>
 {% endblock %}
 
@@ -86,6 +89,15 @@
                 <h1 id="methods-title" class="text-xl font-bold">Write Methods <span id="write-methods-count"></span>
                 </h1>
             </header>
+            {% if mode != "RW" %}
+            <div _="on load wait 30s then remove me" class="p-4 border-b-4 border-gray-700 bg-red-800">
+                <p class="text-center font-bold">To enable transaction sending, <a
+                        href="https://github.com/rhizome-labs/rhizome-contract-explorer#usage"
+                        class="underline hover:no-underline" target="_blank">add an ICX private key to
+                        your
+                        environment</a>.</p>
+            </div>
+            {% endif %}
             <ul id="write-methods-inspector-list" class="h-full overflow-y-auto divide-y divide-gray-700"
                 hx-get="/contract/{{ contract_address }}/inspector/?type=write" hx-trigger="load">
             </ul>

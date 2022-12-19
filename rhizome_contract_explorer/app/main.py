@@ -1,14 +1,11 @@
 import json
 import os
-from decimal import Decimal
-from functools import lru_cache
 
 from fastapi import FastAPI, HTTPException, Request, Response, status
-from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from iconsdk.exception import JSONRPCException
 
-from rhizome_contract_explorer import CONFIG, MODE, TEMPLATES
+from rhizome_contract_explorer import CONFIG, MODE, TEMPLATES, logger
 from rhizome_contract_explorer.app.icx import Icx
 from rhizome_contract_explorer.app.routers import contract
 from rhizome_contract_explorer.app.utils import Utils
@@ -40,6 +37,24 @@ async def get_index(request: Request):
     )
 
 
+@app.get("/profile/")
+async def get_profile(request: Request):
+    icx = Icx()
+    try:
+        icx_address = icx.wallet_address
+        icx_balance = icx.get_balance(icx_address)
+        return TEMPLATES.TemplateResponse(
+            "profile.html",
+            {
+                "request": request,
+                "icx_address": icx_address,
+                "icx_balance": icx_balance,
+            },
+        )
+    except AttributeError:
+        return
+
+
 @app.post("/search/")
 async def search(request: Request, response: Response):
     # Parse form data for contract address.
@@ -54,6 +69,7 @@ async def search(request: Request, response: Response):
         contract_address = "cx0000000000000000000000000000000000000001"
 
     if Utils.validate_contract_address(contract_address) is False:
+        logger.error(f"{contract_address} is not a valid contract address.")
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail=f"{contract_address} is not a valid contract address.",
@@ -252,10 +268,15 @@ async def post_tx(
     tx = icx.build_call_transaction(contract_address, value, method_name, params)
     tx_hash = icx.send_transaction(tx)
 
+    # Get event logs for transaction.
+    logs = icx.get_logs(tx_hash)
+    logs = json.dumps(logs, indent=4)
+
     return TEMPLATES.TemplateResponse(
         "tx_result.html",
         {
             "request": request,
-            "result": tx_hash,
+            "tx_hash": tx_hash,
+            "logs": logs,
         },
     )

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Request, status
 from iconsdk.exception import JSONRPCException
 
-from rhizome_contract_explorer import CONFIG, TEMPLATES
+from rhizome_contract_explorer import CONFIG, MODE, TEMPLATES
 from rhizome_contract_explorer.app.icx import Icx
 from rhizome_contract_explorer.app.utils import Utils
 
@@ -41,6 +41,7 @@ async def get_contract(
         "contract/index.html",
         {
             "request": request,
+            "mode": MODE,
             "contract_address": contract_address,
             "block_height": block_height,
             "score_name": score_name,
@@ -77,6 +78,7 @@ async def get_contract_methods(
         "contract/inspector.html",
         {
             "request": request,
+            "mode": MODE,
             "contract_address": contract_address,
             "read_methods": read_methods,
             "write_methods": write_methods,

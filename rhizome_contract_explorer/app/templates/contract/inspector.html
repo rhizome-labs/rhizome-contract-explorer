@@ -96,6 +96,7 @@
             </div>
             {% endfor %}
         </div>
+        {% if mode == "RW" %}
         <div class="flex gap-4">
             <button class="bg-cyan-700 hover:bg-cyan-800 px-4 py-2 text-gray-100 font-bold">
                 Send Tx
@@ -136,6 +137,7 @@
                 </svg>
             </div>
         </div>
+        {% endif %}
     </form>
     <pre id="{{ method.name }}-call-result" class="hidden"
         _="on htmx:afterSettle remove .hidden from me then js hljs.highlightAll()"></pre>
