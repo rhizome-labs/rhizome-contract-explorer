@@ -65,10 +65,8 @@ async def search(request: Request, response: Response):
         response.headers["HX-Redirect"] = f"/contract/{contract_address}/"
         return None
     except JSONRPCException:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"{contract_address} was not found on this network (api_endpoint: {CONFIG.api_endpoint}, network_id: {CONFIG.network_id}).",
-        )
+        response.headers["HX-Redirect"] = f"/contract/{contract_address}/"
+        return None
 
 
 @app.get("/latest-block/")
