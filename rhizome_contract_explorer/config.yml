@@ -1,3 +1,3 @@
-api_endpoint: https://lisbon.net.solidwallet.io
-network_id: 2
+api_endpoint: https://ctz.solidwallet.io
+network_id: 1
 block_refresh: 2

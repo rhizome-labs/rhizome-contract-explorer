@@ -1,24 +1,42 @@
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, HTTPException, Request, status
 from iconsdk.exception import JSONRPCException
 
-from rhizome_contract_explorer import TEMPLATES
+from rhizome_contract_explorer import CONFIG, TEMPLATES
 from rhizome_contract_explorer.app.icx import Icx
+from rhizome_contract_explorer.app.utils import Utils
 
 router = APIRouter(prefix="/contract")
 
 
 @router.get("/{contract_address}/")
-async def get_index(
+async def get_contract(
     request: Request,
     contract_address: str = None,
     block_height: int = None,
 ):
+    # Raise HTTP exception if contract address is not valid.
+    if Utils.validate_contract_address(contract_address) is False:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=f"{contract_address} is not a valid contract address.",
+        )
+
     icx = Icx()
+
+    try:
+        score_status = icx.get_score_status(contract_address)
+    except JSONRPCException:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"{contract_address} was not found on this network (api_endpoint: {CONFIG.api_endpoint}, network_id: {CONFIG.network_id}).",
+        )
+
+    # Check if SCORE has a name. If it doesn't, set score_name to None.
     try:
         score_name = icx.get_score_name(contract_address)
     except JSONRPCException:
         score_name = None
-    score_status = icx.get_score_status(contract_address)
+
     return TEMPLATES.TemplateResponse(
         "contract/index.html",
         {
@@ -37,6 +55,14 @@ async def get_contract_methods(
     type: str,
     contract_address: str = None,
 ):
+
+    # Raise HTTP exception if contract address is not valid.
+    if Utils.validate_contract_address(contract_address) is False:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=f"{contract_address} is not a valid contract address.",
+        )
+
     icx = Icx()
     abi = icx.get_score_api(contract_address)
 
@@ -65,6 +91,13 @@ async def get_contract_methods(
     contract_address: str = None,
     filter: str = "all",
 ):
+    # Raise HTTP exception if contract address is not valid.
+    if Utils.validate_contract_address(contract_address) is False:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=f"{contract_address} is not a valid contract address.",
+        )
+
     icx = Icx()
     abi = icx.get_score_api(contract_address)
 
@@ -92,6 +125,13 @@ async def get_contract_methods(
     request: Request,
     contract_address: str = None,
 ):
+    # Raise HTTP exception if contract address is not valid.
+    if Utils.validate_contract_address(contract_address) is False:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=f"{contract_address} is not a valid contract address.",
+        )
+
     icx = Icx()
     score_name = icx.get_score_name(contract_address)
     score_status = icx.get_score_status(contract_address)

@@ -11,6 +11,7 @@ from iconsdk.exception import JSONRPCException
 from rhizome_contract_explorer import CONFIG, MODE, TEMPLATES
 from rhizome_contract_explorer.app.icx import Icx
 from rhizome_contract_explorer.app.routers import contract
+from rhizome_contract_explorer.app.utils import Utils
 
 app = FastAPI(docs_url=None)
 
@@ -52,13 +53,10 @@ async def search(request: Request, response: Response):
     if contract_address == "1":
         contract_address = "cx0000000000000000000000000000000000000001"
 
-    if len(contract_address) != 42 or contract_address[:2] != "cx":
-        return TEMPLATES.TemplateResponse(
-            "error.html",
-            {
-                "request": request,
-                "message": f"{contract_address} is not a valid contract address.",
-            },
+    if Utils.validate_contract_address(contract_address) is False:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=f"{contract_address} is not a valid contract address.",
         )
 
     try:
@@ -67,12 +65,9 @@ async def search(request: Request, response: Response):
         response.headers["HX-Redirect"] = f"/contract/{contract_address}/"
         return None
     except JSONRPCException:
-        return TEMPLATES.TemplateResponse(
-            "error.html",
-            {
-                "request": request,
-                "message": f"{contract_address} was not found on this network.",
-            },
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"{contract_address} was not found on this network (api_endpoint: {CONFIG.api_endpoint}, network_id: {CONFIG.network_id}).",
         )
 
 
