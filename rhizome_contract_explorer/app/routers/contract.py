@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Request, status
+from fastapi import APIRouter, HTTPException, Query, Request, status
 from iconsdk.exception import JSONRPCException
 
 from rhizome_contract_explorer import CONFIG, MODE, TEMPLATES
@@ -53,7 +53,7 @@ async def get_contract(
 @router.get("/{contract_address}/inspector/")
 async def get_contract_methods(
     request: Request,
-    type: str,
+    type: str = Query(...),
     contract_address: str = None,
 ):
 
@@ -67,12 +67,13 @@ async def get_contract_methods(
     icx = Icx()
     abi = icx.get_score_api(contract_address)
 
-    read_methods = [method for method in abi if method.get("readonly") == "0x1"]
-    write_methods = [method for method in abi if method.get("readonly") != "0x1"]
-
     # Sort methods by alphabetical order.
-    read_methods.sort(key=lambda x: x["name"].casefold())
-    write_methods.sort(key=lambda x: x["name"].casefold())
+    if type == "read":
+        methods = [method for method in abi if method.get("readonly") == "0x1"]
+    if type == "write":
+        methods = [method for method in abi if method.get("readonly") != "0x1"]
+
+    methods.sort(key=lambda x: x["name"].casefold())
 
     return TEMPLATES.TemplateResponse(
         "contract/inspector.html",
@@ -80,8 +81,7 @@ async def get_contract_methods(
             "request": request,
             "mode": MODE,
             "contract_address": contract_address,
-            "read_methods": read_methods,
-            "write_methods": write_methods,
+            "methods": methods,
             "type": type,
         },
     )
