@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Request
+from iconsdk.exception import JSONRPCException
 
 from rhizome_contract_explorer import TEMPLATES
 from rhizome_contract_explorer.app.icx import Icx
@@ -13,7 +14,10 @@ async def get_index(
     block_height: int = None,
 ):
     icx = Icx()
-    score_name = icx.get_score_name(contract_address)
+    try:
+        score_name = icx.get_score_name(contract_address)
+    except JSONRPCException:
+        score_name = None
     score_status = icx.get_score_status(contract_address)
     return TEMPLATES.TemplateResponse(
         "contract/index.html",

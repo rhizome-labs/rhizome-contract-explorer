@@ -3,7 +3,8 @@ import os
 from decimal import Decimal
 from functools import lru_cache
 
-from fastapi import FastAPI, HTTPException, Request, status
+from fastapi import FastAPI, HTTPException, Request, Response, status
+from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from iconsdk.exception import JSONRPCException
 
@@ -26,10 +27,59 @@ app.mount(
 )
 
 
+@app.get("/")
+async def get_index(request: Request):
+    return TEMPLATES.TemplateResponse(
+        "index.html",
+        {
+            "request": request,
+            "api_endpoint": CONFIG.api_endpoint.strip("https://"),
+            "network_id": CONFIG.network_id,
+        },
+    )
+
+
+@app.post("/search/")
+async def search(request: Request, response: Response):
+    # Parse form data for contract address.
+    form_data = await request.form()
+    form_data_dict = dict(form_data)
+    contract_address = form_data_dict.get("contract-address")
+
+    # If contract address is 0 or 1, set to cx..00 and cx..01 respectively.
+    if contract_address == "0":
+        contract_address = "cx0000000000000000000000000000000000000000"
+    if contract_address == "1":
+        contract_address = "cx0000000000000000000000000000000000000001"
+
+    if len(contract_address) != 42 or contract_address[:2] != "cx":
+        return TEMPLATES.TemplateResponse(
+            "error.html",
+            {
+                "request": request,
+                "message": f"{contract_address} is not a valid contract address.",
+            },
+        )
+
+    try:
+        icx = Icx()
+        score_status = icx.get_score_status(contract_address)
+        response.headers["HX-Redirect"] = f"/contract/{contract_address}/"
+        return None
+    except JSONRPCException:
+        return TEMPLATES.TemplateResponse(
+            "error.html",
+            {
+                "request": request,
+                "message": f"{contract_address} was not found on this network.",
+            },
+        )
+
+
 @app.get("/latest-block/")
 async def get_latest_block(request: Request):
     icx = Icx()
-    block_height = icx.get_block(height_only=True)
+    block_height = icx.get_block("latest", height_only=True)
     return TEMPLATES.TemplateResponse(
         "latest_block.html",
         {

@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 
 {% block container %}
-<div class="flex flex-col gap-4 h-full">
+<div class="flex flex-col gap-4 h-full w-full">
 
     <!-- Contract Overview -->
     <div id="contract-overview" class="p-4 border-4 border-gray-700 flex flex-col gap-4">
         <header>
-            <h1 class="text-2xl font-bold italic">{{ contract_address }}</h1>
+            <h1 class="text-2xl font-bold">{{ contract_address }}</h1>
         </header>
         <table class="table-auto w-fit">
             {% if score_name %}
@@ -15,31 +15,37 @@
                 <td>{{ score_name }}</td>
             </tr>
             {% endif %}
-            <tr class="">
+            <tr>
                 <td class="font-bold pr-2 text-right">Status:</td>
                 <td>{{ score_status['current']['status']|title }}</td>
             </tr>
+            {% if score_status['owner'] %}
             <tr>
                 <td class="font-bold pr-2 text-right">Owner:</td>
                 <td>{{ score_status['owner'] }}</td>
             </tr>
+            {% endif %}
+            {% if score_status['current']['deployTxHash'] %}
             <tr>
                 <td class="font-bold pr-2 text-right">Deploy Tx:</td>
                 <td>{{ score_status['current']['deployTxHash'] }}</td>
             </tr>
+            {% endif %}
+            {% if score_status['current']['auditTxHash'] %}
             <tr>
                 <td class="font-bold pr-2 text-right">Audit Tx:</td>
                 <td>{{ score_status['current']['auditTxHash'] }}</td>
             </tr>
+            {% endif %}
         </table>
     </div>
 
     <!-- Main Body -->
-    <div class="grid grid-cols-7 gap-4 h-full overflow-y-auto">
+    <div class="grid grid-cols-12 gap-4 h-full overflow-y-auto">
         <!-- Contract Methods -->
-        <div id="methods" class="border-4 relative border-gray-700 flex flex-col overflow-x-auto col-span-1">
+        <div id="methods" class="border-4 relative border-gray-700 flex flex-col overflow-x-auto col-span-2">
             <header class="flex flex-col p-4 border-b-4 border-gray-700 gap-2">
-                <h1 class="text-xl font-bold">Contract Methods <span id="methods-count"></span></h1>
+                <h1 class="text-xl font-bold">Contract Methods</h1>
                 <div>
                     <button class="text-sm font-bold bg-cyan-600 px-2 py-1 rounded-md hover:bg-cyan-700"
                         hx-get="/contract/{{ contract_address }}/methods/?filter=all" hx-target="#methods-list">
@@ -58,7 +64,7 @@
             </ul>
         </div>
 
-        <div id="read-methods" class="border-4 relative border-gray-700 flex flex-col overflow-x-auto col-span-3">
+        <div id="read-methods" class="border-4 relative border-gray-700 flex flex-col overflow-x-auto col-span-5">
             <header class="flex flex-col gap-2 p-4 border-b-4 border-gray-700">
                 <h1 id="methods-title" class="text-xl font-bold">Read Methods <span id="read-methods-count"></span></h1>
             </header>
@@ -67,7 +73,7 @@
             </ul>
         </div>
 
-        <div id="write-methods" class="border-4 relative border-gray-700 flex flex-col overflow-x-auto col-span-3">
+        <div id="write-methods" class="border-4 relative border-gray-700 flex flex-col overflow-x-auto col-span-5">
             <header class="flex flex-col gap-2 p-4 border-b-4 border-gray-700">
                 <h1 id="methods-title" class="text-xl font-bold">Write Methods <span id="write-methods-count"></span>
                 </h1>

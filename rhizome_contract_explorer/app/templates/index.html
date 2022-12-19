@@ -1,5 +1,20 @@
 {% extends "base.html" %}
 
 {% block container %}
-
+<style>
+    input[type=search]::-ms-clear {  display: none; width : 0; height: 0; }
+    input[type=search]::-ms-reveal {  display: none; width : 0; height: 0; }
+    input[type="search"]::-webkit-search-decoration,
+    input[type="search"]::-webkit-search-cancel-button,
+    input[type="search"]::-webkit-search-results-button,
+    input[type="search"]::-webkit-search-results-decoration { display: none; }
+</style>
+<div class="flex flex-col items-center justify-center h-full">
+    <form autocomplete="off" hx-post="/search/" class="flex flex-col items-center w-full">
+        <label for="contract-address" class="sr-only">Contract Address</label>
+        <input type="search" name="contract-address" id="contract-address"
+            class="block w-full font-bold max-w-[42ch] bg-black box-content border-4 border-gray-700 shadow-sm text-xl p-4 focus:border-cyan-500 focus:ring-cyan-500"
+            placeholder="cx..." spellcheck="false" required />
+    </form>
+</div>
 {% endblock %}

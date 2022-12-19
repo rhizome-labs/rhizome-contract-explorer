@@ -1,6 +1,7 @@
 from decimal import Decimal
 from functools import lru_cache
 from getpass import getpass
+from logging import log
 from time import sleep
 from typing import Tuple
 
@@ -23,6 +24,8 @@ class Icx:
         self.icon_service = self._get_icon_service(CONFIG.api_endpoint)
         self.nid = CONFIG.network_id
 
+        log(1, f"{self.icon_service, self.nid}")
+
         if MODE == "RW":
             self.wallet = self._load_wallet()
             self.wallet_address = self.wallet.get_address()
@@ -38,7 +41,16 @@ class Icx:
         result = self.icon_service.call(call)
         return result
 
-    def get_balance(self, address):
+    def get_balance(
+        self,
+        address: str,
+    ):
+        """
+        Returns the ICX balance of an address.
+
+        Args:
+            address: An ICX address.
+        """
         balance = self.icon_service.get_balance(address)
         return balance
 
@@ -67,10 +79,23 @@ class Icx:
         result = self.icon_service.get_score_api(contract_address, block_height)
         return result
 
-    def get_score_name(self, contract_address: str, block_height: int = None) -> str:
-        result = self.call(contract_address, "name", height=block_height)
-        print(result)
-        return result
+    def get_score_name(
+        self,
+        contract_address: str,
+        block_height: int = None,
+    ) -> str | None:
+        """
+        Returns the name of a SCORE on the ICON blockchain.
+
+        Args:
+            contract_address: The contract to get the ABI for.
+            block_height: The block height to query.
+        """
+        try:
+            result = self.call(contract_address, "name", height=block_height)
+            return result
+        except JSONRPCException:
+            return None
 
     def get_score_deploy_block(self, contract_address: str) -> int:
         params = {"address": contract_address}
